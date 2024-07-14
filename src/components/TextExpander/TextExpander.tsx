@@ -1,47 +1,47 @@
-import { useState } from "react";
-import styles from "./TextExpander.module.css";
+import { useRef, useState } from "react";
 
 type TextExpanderProps = {
   className?: string;
   showText?: boolean;
   showButtnColor?: string;
+  showPercent?: number;
+  children: string;
 };
 
 function TextExpander({
   className = "",
   showText = false,
-  showButtnColor = "white",
+  showButtnColor = "black",
+  showPercent = 10,
+  children = "",
 }: TextExpanderProps) {
   const [isOpenText, setIsOpenText] = useState(showText);
+  const isFirstRender = useRef(true);
 
   const containerStyles = {
     backgroundColor: "white",
+    display: !isOpenText ? "flex" : "",
+    alignItems: !isOpenText ? "center" : "",
     width: "100%",
   };
 
   const showButtnStyles = {
-    backgroundColor: showButtnColor,
+    color: showButtnColor,
+    paddingLeft: "1em",
     cursor: "pointer",
   };
 
   const textStyles = {
-    display: "inline-block",
+    display: isOpenText ? "inline" : "inline-block",
     whiteSpace: !isOpenText ? "nowrap" : "",
     textOverflow: "ellipsis",
     overflow: !isOpenText ? "hidden" : "",
-    width: "100%",
+    width: !isOpenText ? `${showPercent}%` : "fit-content",
   };
 
   return (
     <div className={className} style={containerStyles}>
-      <div style={{ width: !isOpenText ? "50%" : "100%" }}>
-        <p className={styles.text} style={textStyles}>
-          Lorem ipsum dolor sit amet consectetur, adipisicing elit. Accusamus
-          tenetur eos corrupti ipsa dolores ad quia perferendis repellendus
-          suscipit recusandae qui, quo asperiores commodi veniam nostrum sequi
-          possimus repudiandae delectus.
-        </p>
-      </div>
+      <span style={textStyles}>{children}</span>
       <span
         role="button"
         style={showButtnStyles}
